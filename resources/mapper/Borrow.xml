@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springboot.mapper.BorrowMapper">
+
+    <insert id="save">
+        insert into borrow(book_name, user_id, user_name, user_phone, updatetime, days, return_date)
+        values (#{bookName}, #{userId}, #{userName}, #{userPhone}, #{updatetime}, #{days}, #{returnDate})
+    </insert>
+
+    <insert id="saveRetur">
+        insert into retur(book_name, user_id, user_name, user_phone, updatetime, days, status, return_date,)
+        values (#{bookName}, #{userId}, #{userName}, #{userPhone}, #{updatetime}, #{days}, #{status}, #{returnDate})
+    </insert>
+
+    <update id="updateById">
+        update borrow set
+            book_name = #{bookName}, user_id = #{userId}, user_name = #{userName},
+            user_phone = #{userPhone}, days = #{days}, return = #{returnDate} where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update borrow set status = #{status} where id = #{id}
+    </update>
+
+
+    <delete id="deleteById">
+        delete from borrow where id = #{id}
+    </delete>
+
+    <delete id="deleteReturById">
+        delete from retur where id = #{id}
+    </delete>
+
+    <select id="selectBlog" resultType="com.example.springboot.entity.Borrow">
+        select * from borrow
+    </select>
+
+    <select id="listByCondition" resultType="com.example.springboot.entity.Borrow">
+        select * from borrow
+        <where>
+
+            <if test="bookName != null and bookName != '' ">
+                book_name like concat('%', #{bookName}, '%')
+            </if>
+
+            <if test="bookNo != null and bookNo != '' ">
+                and bookNo = #{bookNo}
+            </if>
+
+            <if test="userName != null and userName != '' ">
+                and user_name like concat('%', #{userName}, '%')
+            </if>
+
+        </where>
+        order by id desc
+    </select>
+
+    <select id="listReturByCondition" resultType="com.example.springboot.entity.Retur">
+        select * from retur
+        <where>
+
+            <if test="bookName != null and bookName != '' ">
+                book_name like concat('%', #{bookName}, '%')
+            </if>
+
+            <if test="bookNo != null and bookNo != '' ">
+                and bookNo = #{bookNo}
+            </if>
+
+            <if test="userName != null and userName != '' ">
+                and user_name like concat('%', #{userName}, '%')
+            </if>
+
+        </where>
+        order by id desc
+    </select>
+
+    <select id="list" resultType="com.example.springboot.entity.Borrow">
+        select * from borrow order by id desc
+    </select>
+
+    <select id="getById" resultType="com.example.springboot.entity.Borrow">
+        select * from borrow where id = #{id}
+    </select>
+
+</mapper>

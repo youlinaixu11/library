@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.CategoryMapper">
+
+    <insert id="save">
+        insert into Category(name, remark, pid)
+        values (#{name}, #{remark}, #{pid})
+    </insert>
+
+    <update id="updateById">
+        update Category set  remark = #{remark}, name = #{name}, updatetime = #{updatetime} where id = #{id}
+    </update>
+
+
+    <delete id="deleteById">
+        delete from Category where id = #{id}
+    </delete>
+
+    <select id="selectBlog" resultType="com.example.springboot.entity.Category">
+        select * from Category
+    </select>
+
+    <resultMap id="categoryMap" type="com.example.springboot.entity.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="pid" property="pid"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <collection property="children" ofType="com.example.springboot.entity.Category" column="id" select="selectByPid"/>
+    </resultMap>
+
+    <select id="selectByPid" resultType="com.example.springboot.entity.Category">
+        select * from Category where pid = #{id} order by id desc
+    </select>
+
+    <select id="listByCondition" resultMap="categoryMap">
+        select * from Category
+        <where>
+            isnull(pid)
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name}, '%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="list" resultType="com.example.springboot.entity.Category">
+        select * from Category order by id desc
+    </select>
+
+    <select id="getById" resultType="com.example.springboot.entity.Category">
+        select * from Category where id = #{id}
+    </select>
+
+</mapper>
